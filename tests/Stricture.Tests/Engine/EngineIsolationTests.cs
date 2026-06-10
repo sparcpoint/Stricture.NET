@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Microsoft.CodeAnalysis;
 using Xunit;
 
-namespace Stricture.Tests
+namespace Stricture.Tests.Engine
 {
     /// <summary>ARCH0002: a rule that throws is isolated and surfaced as an engine-error diagnostic.</summary>
     public sealed class EngineIsolationTests

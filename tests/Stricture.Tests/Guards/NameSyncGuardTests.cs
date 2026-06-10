@@ -1,13 +1,14 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using Xunit;
 
-namespace Stricture.Tests
+namespace Stricture.Tests.Guards
 {
-    /// <summary>The guard tests required by §7.3: name-sync and descriptor uniqueness/coverage.</summary>
-    public sealed class GuardTests
+    /// <summary>
+    /// Name-sync guard (§7.3): the engine's metadata-name strings must equal the real Abstractions
+    /// attribute type names, or the analyzer silently matches nothing.
+    /// </summary>
+    public sealed class NameSyncGuardTests
     {
         public static IEnumerable<object[]> NameMappings() => new[]
         {
@@ -34,32 +35,6 @@ namespace Stricture.Tests
         public void WellKnownName_MatchesAbstractionsType(string wellKnownName, Type attributeType)
         {
             Assert.Equal(attributeType.FullName, wellKnownName);
-        }
-
-        [Fact]
-        public void SupportedDiagnostics_HaveUniqueIds()
-        {
-            var ids = new StrictureAnalyzer().SupportedDiagnostics.Select(d => d.Id).ToList();
-            Assert.Equal(ids.Count, ids.Distinct(StringComparer.Ordinal).Count());
-        }
-
-        [Fact]
-        public void EverySupportedDiagnostic_IsListedInUnshippedReleases()
-        {
-            var unshipped = ReadUnshipped();
-            foreach (var id in new StrictureAnalyzer().SupportedDiagnostics.Select(d => d.Id))
-            {
-                Assert.Contains(id, unshipped, StringComparison.Ordinal);
-            }
-        }
-
-        private static string ReadUnshipped()
-        {
-            var asm = typeof(GuardTests).Assembly;
-            using var stream = asm.GetManifestResourceStream("AnalyzerReleases.Unshipped.md")
-                ?? throw new InvalidOperationException("Embedded AnalyzerReleases.Unshipped.md not found.");
-            using var reader = new StreamReader(stream);
-            return reader.ReadToEnd();
         }
     }
 }

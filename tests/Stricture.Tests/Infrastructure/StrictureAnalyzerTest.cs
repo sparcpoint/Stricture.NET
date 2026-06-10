@@ -16,5 +16,13 @@ namespace Stricture.Tests.Infrastructure
             TestState.AdditionalReferences.Add(
                 MetadataReference.CreateFromFile(typeof(FolderStructureAttribute).Assembly.Location));
         }
+
+        /// <summary>Creates a test pre-loaded with a single source file at <paramref name="path"/>.</summary>
+        public static StrictureAnalyzerTest WithSource(string path, string source)
+        {
+            var test = new StrictureAnalyzerTest();
+            test.TestState.Sources.Add((path, source));
+            return test;
+        }
     }
 }

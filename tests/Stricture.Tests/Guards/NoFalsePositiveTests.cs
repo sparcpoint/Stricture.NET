@@ -2,7 +2,7 @@ using System.Threading.Tasks;
 using Stricture.Tests.Infrastructure;
 using Xunit;
 
-namespace Stricture.Tests
+namespace Stricture.Tests.Guards
 {
     /// <summary>
     /// The no-false-positive guard: a realistic, fully-compliant policy with correctly-placed types
