@@ -6,6 +6,11 @@ root = true
 dotnet_diagnostic.IDE0005.severity = warning
 dotnet_diagnostic.CA1822.severity = suggestion
 
+# The public authoring surface is the single `Stricture` namespace by design, so source is
+# organized into folders WITHOUT folder-matched namespaces. Don't enforce that coupling.
+dotnet_style_namespace_match_folder = false
+dotnet_diagnostic.IDE0130.severity = none
+
 # Stricture analyzer ids default to Warning; consumers escalate to error as they wish.
 # (Example escalation, kept commented so the repo build stays green.)
 # dotnet_diagnostic.ARCH1001.severity = error

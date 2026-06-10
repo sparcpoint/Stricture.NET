@@ -20,31 +20,4 @@ namespace Stricture
         public const string BanNamespace = Ns + ".BanNamespaceAttribute";
         public const string BanPackage = Ns + ".BanPackageAttribute";
     }
-
-    /// <summary>Mirrors <c>Stricture.TypeShape</c>; values must match the abstractions enum.</summary>
-    internal enum TypeShape
-    {
-        None = 0,
-        Class,
-        Struct,
-        Interface,
-        Enum,
-        Record,
-        Delegate,
-    }
-
-    /// <summary>Mirrors <c>Stricture.RuleTier</c>; values must match the abstractions enum.</summary>
-    internal enum RuleTier
-    {
-        Auto = 0,
-        Structural,
-        Convention,
-    }
-
-    /// <summary>Mirrors <c>Stricture.Visibility</c>; values must match the abstractions enum.</summary>
-    internal enum Visibility
-    {
-        Internal = 0,
-        Public,
-    }
 }

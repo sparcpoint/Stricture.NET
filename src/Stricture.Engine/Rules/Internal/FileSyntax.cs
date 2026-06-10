@@ -6,20 +6,6 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Stricture.Rules
 {
-    /// <summary>A top-level type declaration discovered syntactically.</summary>
-    internal readonly struct TopLevelType
-    {
-        public TopLevelType(string name, Location location)
-        {
-            Name = name;
-            Location = location;
-        }
-
-        public string Name { get; }
-
-        public Location Location { get; }
-    }
-
     /// <summary>Syntactic helpers shared by the file rules.</summary>
     internal static class FileSyntax
     {
@@ -129,116 +115,6 @@ namespace Stricture.Rules
             }
 
             return false;
-        }
-    }
-
-    /// <summary>ARCH2001: more than one top-level type in a file that is not a permitted co-location group.</summary>
-    public sealed class OneTypePerFileRule : FileRule
-    {
-        /// <inheritdoc />
-        public override DiagnosticDescriptor Descriptor => Descriptors.Arch2001;
-
-        /// <inheritdoc />
-        public override void Analyze(FileRuleContext ctx)
-        {
-            var policy = ctx.Shared.Policy;
-            if (!policy.OneTypePerFile)
-            {
-                return;
-            }
-
-            var types = FileSyntax.GetTopLevelTypes(ctx.Tree.GetRoot());
-            if (types.Count <= 1)
-            {
-                return;
-            }
-
-            if (FileSyntax.IsValidSingleGroup(types, policy.CoLocateGroups, policy.RequireSharedStem))
-            {
-                return;
-            }
-
-            // If every type is a co-location candidate, ARCH2002 owns the deeper diagnosis.
-            var allKnown = true;
-            foreach (var t in types)
-            {
-                if (FileSyntax.GroupIndexOf(t.Name, policy.CoLocateGroups) < 0)
-                {
-                    allKnown = false;
-                    break;
-                }
-            }
-
-            if (allKnown && policy.CoLocateGroups.Length > 0)
-            {
-                return;
-            }
-
-            // Report the odd-one-out: the last type that is not a co-location candidate.
-            TopLevelType oddOne = types[types.Count - 1];
-            for (var i = types.Count - 1; i >= 0; i--)
-            {
-                if (FileSyntax.GroupIndexOf(types[i].Name, policy.CoLocateGroups) < 0)
-                {
-                    oddOne = types[i];
-                    break;
-                }
-            }
-
-            ctx.Report(Descriptor, oddOne.Location, oddOne.Name);
-        }
-    }
-
-    /// <summary>ARCH2002: co-located types mix suffix groups or (when required) have mismatched stems.</summary>
-    public sealed class CoLocationRule : FileRule
-    {
-        /// <inheritdoc />
-        public override DiagnosticDescriptor Descriptor => Descriptors.Arch2002;
-
-        /// <inheritdoc />
-        public override void Analyze(FileRuleContext ctx)
-        {
-            var policy = ctx.Shared.Policy;
-            if (policy.CoLocateGroups.Length == 0)
-            {
-                return;
-            }
-
-            var types = FileSyntax.GetTopLevelTypes(ctx.Tree.GetRoot());
-            if (types.Count <= 1)
-            {
-                return;
-            }
-
-            // Only diagnose when every type is a co-location candidate (otherwise ARCH2001 owns it).
-            var distinctGroups = new HashSet<int>();
-            foreach (var t in types)
-            {
-                var gi = FileSyntax.GroupIndexOf(t.Name, policy.CoLocateGroups);
-                if (gi < 0)
-                {
-                    return;
-                }
-
-                distinctGroups.Add(gi);
-            }
-
-            if (FileSyntax.IsValidSingleGroup(types, policy.CoLocateGroups, policy.RequireSharedStem))
-            {
-                return;
-            }
-
-            string detail;
-            if (distinctGroups.Count > 1)
-            {
-                detail = "types belong to different co-location groups.";
-            }
-            else
-            {
-                detail = "co-located types must share a common stem.";
-            }
-
-            ctx.Report(Descriptor, types[0].Location, detail);
         }
     }
 }
