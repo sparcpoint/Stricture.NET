@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>Stricture.Tests</RootNamespace>
+    <AssemblyName>Stricture.Tests</AssemblyName>
+    <IsPackable>false</IsPackable>
+    <!-- Keep IDE0005 working (it requires the doc file) but don't require XML docs on test classes,
+         and allow the conventional Method_Underscore_Naming for tests. -->
+    <NoWarn>$(NoWarn);CS1591;CA1707</NoWarn>
+    <!-- The test project intentionally hosts violation fixtures as strings, not as compiled code. -->
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="xunit" />
+    <PackageReference Include="xunit.runner.visualstudio" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Analyzer.Testing.XUnit" />
+    <!-- Raise the transitive Roslyn floor so the test harness resolves a net-coherent 4.8.0 set
+         instead of collapsing to the 1.0.1 (net461) floor. -->
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Read at runtime by the descriptor-uniqueness guard to confirm release-tracking coverage. -->
+    <EmbeddedResource Include="..\..\src\Stricture.Engine\AnalyzerReleases.Unshipped.md"
+                      LogicalName="AnalyzerReleases.Unshipped.md" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Stricture.Engine\Stricture.Engine.csproj" />
+    <ProjectReference Include="..\..\src\Stricture.Abstractions\Stricture.Abstractions.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,17 @@
+<Project>
+  <PropertyGroup>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <AnalysisLevel>latest-Recommended</AnalysisLevel>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+
+    <!-- Identity / copyright, stamped onto every assembly and the package. -->
+    <Authors>Justin Coulston</Authors>
+    <Company>Sparcpoint LLC</Company>
+    <Copyright>Copyright © 2026 Sparcpoint LLC</Copyright>
+  </PropertyGroup>
+</Project>

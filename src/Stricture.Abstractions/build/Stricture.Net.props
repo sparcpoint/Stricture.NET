@@ -1,0 +1,6 @@
+<Project>
+  <!-- Expose ProjectDir to the Stricture analyzer via build_property.ProjectDir. -->
+  <ItemGroup>
+    <CompilerVisibleProperty Include="ProjectDir" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,15 @@
+root = true
+
+[*.cs]
+# Dogfood: nullable + recommended analyzers are on via Directory.Build.props.
+# A couple of explicit severities so the repo holds itself to its own standard.
+dotnet_diagnostic.IDE0005.severity = warning
+dotnet_diagnostic.CA1822.severity = suggestion
+
+# Stricture analyzer ids default to Warning; consumers escalate to error as they wish.
+# (Example escalation, kept commented so the repo build stays green.)
+# dotnet_diagnostic.ARCH1001.severity = error
+
+[*.{md,yml,yaml,json}]
+indent_style = space
+indent_size = 2

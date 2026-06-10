@@ -1,0 +1,15 @@
+## .NET / Visual Studio gitignore
+bin/
+obj/
+.vs/
+*.user
+*.suo
+artifacts/
+[Dd]ebug/
+[Rr]elease/
+*.nupkg
+*.snupkg
+project.lock.json
+.idea/
+TestResults/
+*.binlog

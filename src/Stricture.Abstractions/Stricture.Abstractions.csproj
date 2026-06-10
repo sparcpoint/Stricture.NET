@@ -1,0 +1,43 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <RootNamespace>Stricture</RootNamespace>
+    <AssemblyName>Stricture.Abstractions</AssemblyName>
+
+    <!-- Packaging: one package id delivers both the attributes (lib) and the analyzer (analyzers/). -->
+    <PackageId>Stricture.Net</PackageId>
+    <Version>1.0.0</Version>
+    <Title>Stricture.Net</Title>
+    <Description>Architectural rules for .NET that break the build. Stricture.Net is a Roslyn analyzer toolkit that lets a project declare its architectural conventions — folder layout, type classification, file co-location, default visibility, and banned types/namespaces/packages — as assembly-level attributes, then surfaces violations as live IDE squiggles and dotnet build diagnostics. A single package reference delivers both the attribute library you reference and the analyzer that enforces it; consumers just write `using Stricture;`.</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageTags>roslyn;analyzer;analyzers;architecture;conventions;code-quality;ddd;maintainability;source-analysis</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/sparcpoint/Stricture.NET</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageReleaseNotes>1.0.0 — Initial release. Attribute-driven, per-assembly architectural rules (ARCH0001–ARCH4001): folder-structure layout (ARCH1001/1002), nested-type promotion (ARCH1003), interface-naming (ARCH1010), internal-by-default (ARCH1020), one-type-per-file and suffix co-location (ARCH2001/2002), and banned type/namespace/package usage (ARCH3001/4001), plus config validation (ARCH0001) and isolated rule-error reporting (ARCH0002). Ships the attribute library and the analyzer in a single package. All rules default to Warning; escalate to error per rule in .editorconfig.</PackageReleaseNotes>
+    <IncludeBuildOutput>true</IncludeBuildOutput>
+    <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
+    <DevelopmentDependency>false</DevelopmentDependency>
+    <!-- We intentionally ship no package dependencies, so the empty-dependency-group nuspec note is expected. -->
+    <NoWarn>$(NoWarn);NU5128</NoWarn>
+  </PropertyGroup>
+
+  <!-- Build the analyzer engine before packing so its dll exists to embed. ReferenceOutputAssembly=false
+       keeps the engine out of the consumer's compile references; PrivateAssets=all keeps it off deps. -->
+  <ItemGroup>
+    <ProjectReference Include="..\Stricture.Engine\Stricture.Engine.csproj"
+                      ReferenceOutputAssembly="false" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- The attribute library itself: lib/netstandard2.0/Stricture.Abstractions.dll (handled by IncludeBuildOutput). -->
+    <!-- Ship the engine as an analyzer asset. -->
+    <None Include="..\Stricture.Engine\bin\$(Configuration)\netstandard2.0\Stricture.Engine.dll"
+          Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+    <!-- Make ProjectDir visible to the analyzer in consuming builds. -->
+    <None Include="build\Stricture.Net.props" Pack="true" PackagePath="build" Visible="false" />
+    <None Include="..\..\README.md" Pack="true" PackagePath="\" Visible="false" />
+  </ItemGroup>
+
+</Project>
