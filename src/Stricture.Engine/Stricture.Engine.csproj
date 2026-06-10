@@ -6,6 +6,8 @@
     <AssemblyName>Stricture.Engine</AssemblyName>
     <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
     <IncludeBuildOutput>false</IncludeBuildOutput>
+    <!-- The engine ships inside the Stricture.Net package (assembled by Stricture.Package), not on its own. -->
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>

@@ -3,7 +3,7 @@
 set -euo pipefail
 
 CONFIG="${1:-Release}"
-PKG_DIR="src/Stricture.Abstractions/bin/${CONFIG}"
+PKG_DIR="src/Stricture.Package/bin/${CONFIG}"
 
 nupkg="$(ls -1 "${PKG_DIR}"/Stricture.Net.*.nupkg 2>/dev/null | head -n 1 || true)"
 if [[ -z "${nupkg}" ]]; then
