@@ -24,5 +24,8 @@ namespace Stricture
 
         /// <summary>The category folder used for types this structure cannot otherwise classify.</summary>
         public string? Fallback { get; set; }
+
+        /// <summary>The severity this rule reports its violations at. Defaults to <see cref="Severity.Warning"/>.</summary>
+        public Severity Severity { get; set; }
     }
 }

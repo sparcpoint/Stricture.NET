@@ -8,12 +8,13 @@ namespace Stricture
     /// </summary>
     internal sealed class ExtensionHomePolicy
     {
-        public ExtensionHomePolicy(INamedTypeSymbol? extendedType, string className, string? @namespace, bool mustBePartial)
+        public ExtensionHomePolicy(INamedTypeSymbol? extendedType, string className, string? @namespace, bool mustBePartial, DiagnosticSeverity severity)
         {
             ExtendedType = extendedType;
             ClassName = className;
             Namespace = @namespace;
             MustBePartial = mustBePartial;
+            Severity = severity;
         }
 
         /// <summary>The type whose extension methods this governs, or <see langword="null"/> if it could not be resolved.</summary>
@@ -27,6 +28,9 @@ namespace Stricture
 
         /// <summary>Whether the host class must be declared <c>partial</c>.</summary>
         public bool MustBePartial { get; }
+
+        /// <summary>The severity violations of this convention are reported at.</summary>
+        public DiagnosticSeverity Severity { get; }
 
         /// <summary>True when the policy is usable: the extended type resolved and a class name was given.</summary>
         public bool IsActive => ExtendedType != null && !string.IsNullOrEmpty(ClassName);

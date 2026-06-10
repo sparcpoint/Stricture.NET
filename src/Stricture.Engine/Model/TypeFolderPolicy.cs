@@ -14,7 +14,8 @@ namespace Stricture
             INamedTypeSymbol? markedWith,
             string? endsWith,
             bool isRecord,
-            RuleTier tier)
+            RuleTier tier,
+            DiagnosticSeverity severity)
         {
             Folder = folder;
             Kind = kind;
@@ -24,6 +25,7 @@ namespace Stricture
             EndsWith = endsWith;
             IsRecord = isRecord;
             Tier = tier;
+            Severity = severity;
         }
 
         public string Folder { get; }
@@ -41,6 +43,9 @@ namespace Stricture
         public bool IsRecord { get; }
 
         public RuleTier Tier { get; }
+
+        /// <summary>The severity violations of this mapping are reported at.</summary>
+        public DiagnosticSeverity Severity { get; }
 
         /// <summary>The tier, deriving from the signal when <see cref="RuleTier.Auto"/>.</summary>
         public RuleTier EffectiveTier

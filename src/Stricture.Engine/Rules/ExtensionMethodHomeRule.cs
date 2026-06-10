@@ -41,7 +41,7 @@ namespace Stricture.Rules
                     continue;
                 }
 
-                ctx.Report(Descriptor, ctx.TypeName, home.ExtendedType!.Name, DescribeExpectation(home));
+                ctx.Report(Descriptor, home.Severity, ctx.TypeName, home.ExtendedType!.Name, DescribeExpectation(home));
             }
         }
 

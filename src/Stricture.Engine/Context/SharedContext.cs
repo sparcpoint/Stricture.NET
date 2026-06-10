@@ -65,6 +65,9 @@ namespace Stricture
             var oneTypePerFile = false;
             var requireSharedStem = true;
             var defaultVisibilityInternal = false;
+            var oneTypePerFileSeverity = DiagnosticSeverity.Warning;
+            var defaultVisibilitySeverity = DiagnosticSeverity.Warning;
+            DiagnosticSeverity? interfaceNamingSeverity = null;
 
             foreach (var attr in compilation.Assembly.GetAttributes())
             {
@@ -80,7 +83,8 @@ namespace Stricture
                         structures.Add(new FolderStructurePolicy(
                             GetCtorString(attr, 0) ?? string.Empty,
                             GetNamedString(attr, "Pattern") ?? string.Empty,
-                            GetNamedString(attr, "Fallback")));
+                            GetNamedString(attr, "Fallback"),
+                            GetNamedSeverity(attr, "Severity")));
                         break;
 
                     case WellKnownNames.TypeFolder:
@@ -92,39 +96,45 @@ namespace Stricture
                             GetNamedType(attr, "MarkedWith"),
                             GetNamedString(attr, "EndsWith"),
                             GetNamedBool(attr, "IsRecord"),
-                            (RuleTier)GetNamedEnum(attr, "Tier")));
+                            (RuleTier)GetNamedEnum(attr, "Tier"),
+                            GetNamedSeverity(attr, "Severity")));
                         break;
 
                     case WellKnownNames.OneTypePerFile:
                         oneTypePerFile = true;
                         requireSharedStem = GetNamedBool(attr, "RequireSharedStem", defaultValue: true);
+                        oneTypePerFileSeverity = GetNamedSeverity(attr, "Severity");
                         break;
 
                     case WellKnownNames.CoLocateBySuffix:
-                        coLocate.Add(new CoLocateGroup(GetCtorStringArray(attr, 0)));
+                        coLocate.Add(new CoLocateGroup(GetCtorStringArray(attr, 0), GetNamedSeverity(attr, "Severity")));
                         break;
 
                     case WellKnownNames.DefaultVisibility:
                         defaultVisibilityInternal = (Visibility)GetCtorEnum(attr, 0) == Visibility.Internal;
+                        defaultVisibilitySeverity = GetNamedSeverity(attr, "Severity");
                         break;
 
                     case WellKnownNames.BanType:
                         bannedTypes.Add(new BanTypeEntry(
                             GetNamedType(attr, "Type"),
                             GetNamedString(attr, "FullyQualifiedName"),
-                            GetNamedString(attr, "Message")));
+                            GetNamedString(attr, "Message"),
+                            GetNamedSeverity(attr, "Severity")));
                         break;
 
                     case WellKnownNames.BanNamespace:
                         bannedNamespaces.Add(new BanNamespaceEntry(
                             GetCtorString(attr, 0) ?? string.Empty,
-                            GetNamedString(attr, "Message")));
+                            GetNamedString(attr, "Message"),
+                            GetNamedSeverity(attr, "Severity")));
                         break;
 
                     case WellKnownNames.BanPackage:
                         bannedPackages.Add(new BanPackageEntry(
                             GetCtorString(attr, 0) ?? string.Empty,
-                            GetNamedString(attr, "Message")));
+                            GetNamedString(attr, "Message"),
+                            GetNamedSeverity(attr, "Severity")));
                         break;
 
                     case WellKnownNames.ExtensionMethodHome:
@@ -132,7 +142,12 @@ namespace Stricture
                             GetCtorType(attr, 0),
                             GetCtorString(attr, 1) ?? string.Empty,
                             GetNamedString(attr, "Namespace"),
-                            GetNamedBool(attr, "MustBePartial", defaultValue: true)));
+                            GetNamedBool(attr, "MustBePartial", defaultValue: true),
+                            GetNamedSeverity(attr, "Severity")));
+                        break;
+
+                    case WellKnownNames.ForbidInterfaceNaming:
+                        interfaceNamingSeverity = GetNamedSeverity(attr, "Severity");
                         break;
 
                     default:
@@ -153,6 +168,9 @@ namespace Stricture
                 oneTypePerFile,
                 requireSharedStem,
                 defaultVisibilityInternal,
+                oneTypePerFileSeverity,
+                defaultVisibilitySeverity,
+                interfaceNamingSeverity,
                 configIssues);
         }
 
@@ -273,6 +291,10 @@ namespace Stricture
             var tc = GetNamed(attr, name);
             return tc?.Value is { } v ? Convert.ToInt32(v, System.Globalization.CultureInfo.InvariantCulture) : 0;
         }
+
+        // Maps the consumer's Stricture.Severity enum (Warning = 0, Error = 1) to Roslyn's DiagnosticSeverity.
+        private static DiagnosticSeverity GetNamedSeverity(AttributeData attr, string name) =>
+            GetNamedEnum(attr, name) == 1 ? DiagnosticSeverity.Error : DiagnosticSeverity.Warning;
 
         private static INamedTypeSymbol? GetNamedType(AttributeData attr, string name) =>
             GetNamed(attr, name)?.Value as INamedTypeSymbol;

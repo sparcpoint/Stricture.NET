@@ -15,7 +15,10 @@ using Stricture;
 [assembly: CoLocateBySuffix("Request", "Response")]
 
 [assembly: DefaultVisibility(Visibility.Internal)]
-[assembly: BanPackage("Moq", Message = "Hand-write test doubles instead.")]
+[assembly: ForbidInterfaceNaming]
+
+// Severity defaults to Warning; opt a single rule up to a build error with Severity = Severity.Error.
+[assembly: BanPackage("Moq", Message = "Hand-write test doubles instead.", Severity = Severity.Error)]
 
 // IServiceCollection extensions all live in one partial ServiceCollectionExtensions class.
 [assembly: ExtensionMethodHome(

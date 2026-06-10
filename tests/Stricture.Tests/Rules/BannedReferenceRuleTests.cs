@@ -43,5 +43,26 @@ namespace Stricture.Tests.Rules
             await StrictureAnalyzerTest.WithSource("/Policy.cs",
                 "using Stricture;\n[assembly: BanPackage(\"NoSuchAssembly\")]\n").RunAsync();
         }
+
+        [Fact]
+        public void Logic_ReportsAsErrorWhenSeverityIsError()
+        {
+            const string source =
+                "using Stricture;\n[assembly: BanPackage(\"Stricture.Abstractions\", Severity = Severity.Error)]\n";
+            var diags = RuleTestHarness.RunCompilation(new BannedReferenceRule(), source, "/proj/Architecture.cs");
+            var diag = Assert.Single(diags);
+            Assert.Equal("ARCH4001", diag.Id);
+            Assert.Equal(DiagnosticSeverity.Error, diag.Severity);
+        }
+
+        [Fact]
+        public async Task Integration_Fail_BannedReferenceAsError()
+        {
+            // End-to-end proof that a per-instance Error severity survives the full analyzer pipeline.
+            var test = StrictureAnalyzerTest.WithSource("/Policy.cs",
+                "using Stricture;\n[assembly: BanPackage(\"Stricture.Abstractions\", Severity = Severity.Error)]\n");
+            test.ExpectedDiagnostics.Add(new DiagnosticResult("ARCH4001", DiagnosticSeverity.Error).WithNoLocation());
+            await test.RunAsync();
+        }
     }
 }

@@ -18,5 +18,8 @@ namespace Stricture
 
         /// <summary>The expected default visibility.</summary>
         public Visibility Visibility { get; }
+
+        /// <summary>The severity this rule reports its violations at. Defaults to <see cref="Severity.Warning"/>.</summary>
+        public Severity Severity { get; set; }
     }
 }

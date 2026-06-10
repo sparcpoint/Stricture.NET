@@ -16,6 +16,6 @@
 
     <!-- Single source of truth for versioning. Drives the Stricture.Net package version and the
          AssemblyVersion/FileVersion of every assembly, so one bump moves them together. -->
-    <Version>1.1.0</Version>
+    <Version>1.2.0</Version>
   </PropertyGroup>
 </Project>

@@ -22,7 +22,8 @@ namespace Stricture.Rules
                 return;
             }
 
-            var expected = ctx.ResolveCategory() ?? structure.Fallback;
+            var match = ctx.ResolveCategoryMatch();
+            var expected = match?.Folder ?? structure.Fallback;
             if (expected is null)
             {
                 return;
@@ -30,7 +31,8 @@ namespace Stricture.Rules
 
             if (!string.Equals(actual, expected, StringComparison.Ordinal))
             {
-                ctx.Report(Descriptor, ctx.TypeName, expected, actual ?? string.Empty);
+                var severity = match?.Severity ?? structure.Severity;
+                ctx.Report(Descriptor, severity, ctx.TypeName, expected, actual ?? string.Empty);
             }
         }
     }

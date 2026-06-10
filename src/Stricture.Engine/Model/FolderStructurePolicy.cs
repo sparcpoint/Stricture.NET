@@ -1,16 +1,18 @@
 using System;
 using System.Collections.Generic;
+using Microsoft.CodeAnalysis;
 
 namespace Stricture
 {
     /// <summary>A declared <c>FolderStructure</c>: a root + path pattern + optional fallback category.</summary>
     internal sealed class FolderStructurePolicy
     {
-        public FolderStructurePolicy(string root, string pattern, string? fallback)
+        public FolderStructurePolicy(string root, string pattern, string? fallback, DiagnosticSeverity severity)
         {
             Root = root ?? string.Empty;
             Pattern = pattern ?? string.Empty;
             Fallback = fallback;
+            Severity = severity;
             Tokens = SplitTokens(Pattern);
             CategoryIndex = IndexOfCategory(Tokens);
         }
@@ -20,6 +22,9 @@ namespace Stricture
         public string Pattern { get; }
 
         public string? Fallback { get; }
+
+        /// <summary>The severity violations under this structure are reported at.</summary>
+        public DiagnosticSeverity Severity { get; }
 
         public IReadOnlyList<string> Tokens { get; }
 

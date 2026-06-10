@@ -33,5 +33,8 @@ namespace Stricture
 
         /// <summary>Whether the host class must be declared <c>partial</c>. Defaults to <see langword="true"/>.</summary>
         public bool MustBePartial { get; set; } = true;
+
+        /// <summary>The severity this rule reports its violations at. Defaults to <see cref="Severity.Warning"/>.</summary>
+        public Severity Severity { get; set; }
     }
 }

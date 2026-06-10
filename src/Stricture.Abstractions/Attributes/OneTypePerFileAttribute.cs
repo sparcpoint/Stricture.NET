@@ -11,5 +11,8 @@ namespace Stricture
         /// <c>FooRequest</c>/<c>FooResponse</c>).
         /// </summary>
         public bool RequireSharedStem { get; set; } = true;
+
+        /// <summary>The severity this rule reports its violations at. Defaults to <see cref="Severity.Warning"/>.</summary>
+        public Severity Severity { get; set; }
     }
 }

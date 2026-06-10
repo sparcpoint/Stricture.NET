@@ -39,5 +39,8 @@ namespace Stricture
         /// <see cref="Kind"/>/<see cref="DerivesFrom"/> are structural; the rest are conventional.
         /// </summary>
         public RuleTier Tier { get; set; } = RuleTier.Auto;
+
+        /// <summary>The severity this rule reports its violations at. Defaults to <see cref="Severity.Warning"/>.</summary>
+        public Severity Severity { get; set; }
     }
 }

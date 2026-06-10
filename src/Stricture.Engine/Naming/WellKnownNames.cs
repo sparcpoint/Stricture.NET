@@ -17,6 +17,7 @@ namespace Stricture
         public const string DefaultVisibility = Ns + ".DefaultVisibilityAttribute";
         public const string PublicApi = Ns + ".PublicApiAttribute";
         public const string ExtensionMethodHome = Ns + ".ExtensionMethodHomeAttribute";
+        public const string ForbidInterfaceNaming = Ns + ".ForbidInterfaceNamingAttribute";
         public const string BanType = Ns + ".BanTypeAttribute";
         public const string BanNamespace = Ns + ".BanNamespaceAttribute";
         public const string BanPackage = Ns + ".BanPackageAttribute";

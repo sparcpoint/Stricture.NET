@@ -114,9 +114,12 @@ public class Orders            // ARCH1003: 'Status' is a nested enum; promote i
 
 ### Don't name a type after its interface — `ARCH1010`
 
-Always on, no configuration. A concrete `Foo : IFoo` is flagged — pick an intent-revealing name:
+Turn it on with `[assembly: ForbidInterfaceNaming]`. A concrete `Foo : IFoo` is then flagged — pick an
+intent-revealing name:
 
 ```csharp
+[assembly: ForbidInterfaceNaming]
+
 public interface IClock { }
 public sealed class Clock : IClock { }       // ARCH1010 — rename to SystemClock, FixedClock, …
 ```
@@ -197,8 +200,19 @@ public sealed class Helper { }
 
 ## Severity
 
-Every `ARCHxxxx` rule defaults to **Warning** so consumer builds stay green until you opt in. Escalate any
-rule — or a whole category — to a build error in `.editorconfig`:
+Every rule defaults to **Warning** so consumer builds stay green until you opt in. Escalate in two ways.
+
+**Per attribute, in the policy.** Every rule attribute takes a `Severity`. Set it to `Severity.Error` to
+make the violations *that attribute instance* produces fail the build, while other instances stay warnings:
+
+```csharp
+[assembly: ForbidInterfaceNaming(Severity = Severity.Error)]            // this rule is an error
+[assembly: BanPackage("Newtonsoft.Json", Severity = Severity.Error)]    // only this ban is an error
+[assembly: BanPackage("Moq")]                                           // …still a warning
+```
+
+**Per id or category, in `.editorconfig`.** This still works and *takes precedence* over the attribute
+value, so a team can override the policy author's choice:
 
 ```ini
 [*.cs]
@@ -207,7 +221,8 @@ dotnet_analyzer_diagnostic.category-Stricture.Layout.severity = error   # a whol
 ```
 
 Categories: `Stricture.Config`, `Stricture.Engine`, `Stricture.Layout`, `Stricture.Naming`,
-`Stricture.Visibility`, `Stricture.Bans`.
+`Stricture.Visibility`, `Stricture.Bans`. (`ARCH0001`/`ARCH0002` are internal meta-diagnostics with no
+attribute and are configurable only here.)
 
 ## Diagnostics
 
@@ -218,7 +233,7 @@ Categories: `Stricture.Config`, `Stricture.Engine`, `Stricture.Layout`, `Strictu
 | `ARCH1001` | A top-level type in the wrong category folder |
 | `ARCH1002` | A type whose path doesn't match its structure's pattern |
 | `ARCH1003` | A public/internal nested type that should be promoted to its own file |
-| `ARCH1010` | A concrete type named after its interface (`Foo : IFoo`) |
+| `ARCH1010` | A concrete type named after its interface (`Foo : IFoo`) — opt-in via `[ForbidInterfaceNaming]` |
 | `ARCH1020` | A public type that should be internal by default |
 | `ARCH1030` | Extension methods for a type declared outside their designated host class |
 | `ARCH2001` | More than one top-level type per file |

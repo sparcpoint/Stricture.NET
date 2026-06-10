@@ -48,6 +48,14 @@ the consumer's attributes by metadata-name string.
 - **Every diagnostic id must be listed in
   [`AnalyzerReleases.Unshipped.md`](src/Stricture.Engine/AnalyzerReleases.Unshipped.md)** or the engine
   build fails (RS2007/RS2008; `EnforceExtendedAnalyzerRules=true`).
+- **Every consumer rule is opt-in.** A rule must not report unless its governing assembly attribute is
+  present (gate on the policy entry and return early when absent). `ARCH0001`/`ARCH0002` are internal
+  meta-diagnostics and the only exceptions.
+- **Every assembly-level rule attribute exposes a settable `Severity` property** (`Stricture.Severity`,
+  default `Warning`); the rule reports at that instance's severity via `ctx.Report(descriptor, severity, …)`,
+  which routes through [`DiagnosticFactory`](src/Stricture.Engine/Diagnostics/DiagnosticFactory.cs). The
+  descriptor id is preserved, so `.editorconfig`/ruleset overrides still win. A guard test
+  (`SeverityPropertyGuardTests`) enforces the property.
 - **`samples/CleanSample` must build with zero diagnostics** (it's in the solution build; with
   `TreatWarningsAsErrors` any false positive fails CI). Intentional violations live only as **test
   fixtures**, never as a buildable project.
@@ -77,22 +85,28 @@ convention-tier (last wins), else null → caller applies the structure `Fallbac
 ## Adding a rule
 
 1. Create `src/Stricture.Engine/Rules/<Name>Rule.cs` subclassing the right base; expose its
-   `DiagnosticDescriptor`(s) and implement `Analyze`. (Reflection discovers it automatically.)
+   `DiagnosticDescriptor`(s) and implement `Analyze`. (Reflection discovers it automatically.) The rule
+   must be **opt-in** — gate on its governing attribute's policy entry and return early when absent — and
+   must report through the severity-aware overload (`ctx.Report(descriptor, entry.Severity, …)`) so the
+   consumer's per-instance `Severity` is honored.
 2. Add the descriptor in [`Diagnostics/Descriptors.cs`](src/Stricture.Engine/Diagnostics/Descriptors.cs).
    Default severity `Warning`. Watch RS1032: single-sentence messages take **no** trailing period.
 3. Add the id row to
    [`AnalyzerReleases.Unshipped.md`](src/Stricture.Engine/AnalyzerReleases.Unshipped.md).
 4. Add `tests/Stricture.Tests/Rules/<Name>RuleTests.cs` with both a logic and an integration fixture
    (≥1 passing + ≥1 failing per id).
-5. If the rule needs a new consumer attribute, add it to `Stricture.Abstractions`, add a `WellKnownNames`
-   constant, and update the name-sync guard's mapping list.
+5. If the rule needs a new consumer attribute, add it to `Stricture.Abstractions` **with a settable
+   `Severity Severity { get; set; }` property** (default `Warning`), add a `WellKnownNames` constant, parse
+   the severity in `SharedContext.ParsePolicy` via `GetNamedSeverity` and thread it onto the policy entry,
+   and update the name-sync guard's mapping list. (`SeverityPropertyGuardTests` enforces the `Severity`
+   property on every assembly-level attribute.)
 6. Confirm `CleanSample` still builds clean.
 
 ## Diagnostics
 
 `ARCH0001` config validation · `ARCH0002` rule-error isolation · `ARCH1001` wrong category folder ·
 `ARCH1002` path doesn't match structure pattern · `ARCH1003` nested-type promotion · `ARCH1010`
-named-after-interface (`Foo : IFoo`) · `ARCH1020` internal-by-default · `ARCH2001` one-type-per-file ·
+named-after-interface (`Foo : IFoo`; opt-in via `[ForbidInterfaceNaming]`) · `ARCH1020` internal-by-default · `ARCH2001` one-type-per-file ·
 `ARCH2002` co-location suffix/stem · `ARCH3001` banned type/namespace usage · `ARCH4001` banned assembly.
 
 ## Testing
@@ -106,7 +120,8 @@ Two layers, both xUnit (`tests/Stricture.Tests`, organized one file per rule und
   analyzer via [`StrictureAnalyzerTest`](tests/Stricture.Tests/Infrastructure/StrictureAnalyzerTest.cs)
   (`ReferenceAssemblies.Net.Net80`). Failing fixtures use `{|ARCHxxxx:span|}` markup; no-location
   diagnostics use explicit `DiagnosticResult().WithNoLocation()`.
-- **Guards** (`Guards/`): name-sync, descriptor-uniqueness + release-tracking coverage, and the
+- **Guards** (`Guards/`): name-sync, descriptor-uniqueness + release-tracking coverage, the
+  severity-property guard (every assembly-level attribute exposes a settable `Severity`), and the
   no-false-positive guard. `ARCH0002` is covered by the isolation tests in `Engine/`.
 
 ## Build & verify

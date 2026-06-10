@@ -55,7 +55,7 @@ namespace Stricture.Rules
                 }
             }
 
-            ctx.Report(Descriptor, oddOne.Location, oddOne.Name);
+            ctx.Report(Descriptor, policy.OneTypePerFileSeverity, oddOne.Location, oddOne.Name);
         }
     }
 }

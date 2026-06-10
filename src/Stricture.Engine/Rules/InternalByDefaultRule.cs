@@ -26,7 +26,7 @@ namespace Stricture.Rules
                 return;
             }
 
-            ctx.Report(Descriptor, ctx.TypeName);
+            ctx.Report(Descriptor, ctx.Shared.Policy.DefaultVisibilitySeverity, ctx.TypeName);
         }
     }
 }

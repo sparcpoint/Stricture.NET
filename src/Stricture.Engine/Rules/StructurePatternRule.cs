@@ -21,7 +21,7 @@ namespace Stricture.Rules
                 return;
             }
 
-            ctx.Report(Descriptor, ctx.TypeName, structure.Pattern);
+            ctx.Report(Descriptor, structure.Severity, ctx.TypeName, structure.Pattern);
         }
     }
 }

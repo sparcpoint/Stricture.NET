@@ -1,3 +1,5 @@
+using Microsoft.CodeAnalysis;
+
 namespace Stricture
 {
     /// <summary>
@@ -7,13 +9,14 @@ namespace Stricture
     /// </summary>
     public sealed class StructureMatch
     {
-        internal StructureMatch(string root, string pattern, string? fallback, string? actualCategoryFolder, bool shapeMatches)
+        internal StructureMatch(string root, string pattern, string? fallback, string? actualCategoryFolder, bool shapeMatches, DiagnosticSeverity severity)
         {
             Root = root;
             Pattern = pattern;
             Fallback = fallback;
             ActualCategoryFolder = actualCategoryFolder;
             ShapeMatches = shapeMatches;
+            Severity = severity;
         }
 
         /// <summary>The structure root segment this type's path falls under.</summary>
@@ -30,5 +33,8 @@ namespace Stricture
 
         /// <summary>Whether the path's depth matches the structure pattern's token count.</summary>
         public bool ShapeMatches { get; }
+
+        /// <summary>The severity violations under this structure are reported at.</summary>
+        public DiagnosticSeverity Severity { get; }
     }
 }

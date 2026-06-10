@@ -21,13 +21,13 @@ namespace Stricture.Rules
                 return;
             }
 
-            var category = ctx.ResolveCategory();
-            if (category is null)
+            var match = ctx.ResolveCategoryMatch();
+            if (match is null)
             {
                 return;
             }
 
-            ctx.Report(Descriptor, ctx.TypeName, ctx.KindWord, category);
+            ctx.Report(Descriptor, match.Severity, ctx.TypeName, ctx.KindWord, match.Folder);
         }
     }
 }

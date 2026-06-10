@@ -35,7 +35,7 @@ namespace Stricture.Rules
                           && string.Equals(ban.FullyQualifiedName, fullName, StringComparison.Ordinal));
                 if (hit)
                 {
-                    ctx.Report(Descriptor, Detail($"type '{fullName}'", ban.Message));
+                    ctx.Report(Descriptor, ban.Severity, Detail($"type '{fullName}'", ban.Message));
                     return;
                 }
             }
@@ -48,7 +48,7 @@ namespace Stricture.Rules
                     if (string.Equals(ns, ban.Namespace, StringComparison.Ordinal)
                         || ns.StartsWith(ban.Namespace + ".", StringComparison.Ordinal))
                     {
-                        ctx.Report(Descriptor, Detail($"namespace '{ns}' (type '{fullName}')", ban.Message));
+                        ctx.Report(Descriptor, ban.Severity, Detail($"namespace '{ns}' (type '{fullName}')", ban.Message));
                         return;
                     }
                 }

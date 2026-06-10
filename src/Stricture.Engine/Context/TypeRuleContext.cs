@@ -106,6 +106,9 @@ namespace Stricture
         /// <summary>Resolves the category folder per the precedence in §6.6.</summary>
         public string? ResolveCategory() => Shared.Policy.ResolveCategory(Type);
 
+        /// <summary>Resolves the <c>TypeFolder</c> that classifies this type (folder + severity), or null.</summary>
+        internal TypeFolderPolicy? ResolveCategoryMatch() => Shared.Policy.ResolveCategoryMatch(Type);
+
         /// <summary>Locates the structure this type's file falls under.</summary>
         public bool TryGetStructure(out StructureMatch structure, out string? actualCategoryFolder)
         {
@@ -132,5 +135,16 @@ namespace Stricture
         /// <summary>Reports a diagnostic at the given location.</summary>
         public void Report(DiagnosticDescriptor descriptor, Location location, params object[] messageArgs) =>
             _report(Diagnostic.Create(descriptor, location, messageArgs));
+
+        /// <summary>Reports a diagnostic on the type's identifier at the given severity.</summary>
+        public void Report(DiagnosticDescriptor descriptor, DiagnosticSeverity severity, params object[] messageArgs)
+        {
+            var location = Type.Locations.FirstOrDefault(l => l.IsInSource) ?? Location.None;
+            Report(descriptor, severity, location, messageArgs);
+        }
+
+        /// <summary>Reports a diagnostic at the given location and severity.</summary>
+        public void Report(DiagnosticDescriptor descriptor, DiagnosticSeverity severity, Location location, params object[] messageArgs) =>
+            _report(DiagnosticFactory.Create(descriptor, severity, location, messageArgs));
     }
 }

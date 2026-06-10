@@ -14,5 +14,8 @@ namespace Stricture
 
         /// <summary>An optional message explaining the ban.</summary>
         public string? Message { get; set; }
+
+        /// <summary>The severity this rule reports its violations at. Defaults to <see cref="Severity.Warning"/>.</summary>
+        public Severity Severity { get; set; }
     }
 }

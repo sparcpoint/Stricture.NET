@@ -29,5 +29,13 @@ namespace Stricture
         /// <summary>Reports a diagnostic at the given location.</summary>
         public void Report(DiagnosticDescriptor descriptor, Location location, params object[] messageArgs) =>
             _report(Diagnostic.Create(descriptor, location, messageArgs));
+
+        /// <summary>Reports a diagnostic at the assembly level (no location) at the given severity.</summary>
+        public void Report(DiagnosticDescriptor descriptor, DiagnosticSeverity severity, params object[] messageArgs) =>
+            Report(descriptor, severity, Location.None, messageArgs);
+
+        /// <summary>Reports a diagnostic at the given location and severity.</summary>
+        public void Report(DiagnosticDescriptor descriptor, DiagnosticSeverity severity, Location location, params object[] messageArgs) =>
+            _report(DiagnosticFactory.Create(descriptor, severity, location, messageArgs));
     }
 }

@@ -52,7 +52,17 @@ namespace Stricture.Rules
                 detail = "co-located types must share a common stem.";
             }
 
-            ctx.Report(Descriptor, types[0].Location, detail);
+            var severity = DiagnosticSeverity.Warning;
+            foreach (var gi in distinctGroups)
+            {
+                if (policy.CoLocateGroups[gi].Severity == DiagnosticSeverity.Error)
+                {
+                    severity = DiagnosticSeverity.Error;
+                    break;
+                }
+            }
+
+            ctx.Report(Descriptor, severity, types[0].Location, detail);
         }
     }
 }

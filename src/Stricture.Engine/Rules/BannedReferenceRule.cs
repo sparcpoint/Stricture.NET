@@ -28,7 +28,7 @@ namespace Stricture.Rules
                         var detail = string.IsNullOrEmpty(ban.Message)
                             ? $"'{ban.AssemblyName}'"
                             : $"'{ban.AssemblyName}' — {ban.Message}";
-                        ctx.Report(Stricture.Descriptors.Arch4001, detail);
+                        ctx.Report(Stricture.Descriptors.Arch4001, ban.Severity, detail);
                     }
                 }
             }
