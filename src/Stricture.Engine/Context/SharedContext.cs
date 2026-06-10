@@ -61,6 +61,7 @@ namespace Stricture
             var bannedTypes = ImmutableArray.CreateBuilder<BanTypeEntry>();
             var bannedNamespaces = ImmutableArray.CreateBuilder<BanNamespaceEntry>();
             var bannedPackages = ImmutableArray.CreateBuilder<BanPackageEntry>();
+            var extensionHomes = ImmutableArray.CreateBuilder<ExtensionHomePolicy>();
             var oneTypePerFile = false;
             var requireSharedStem = true;
             var defaultVisibilityInternal = false;
@@ -126,6 +127,14 @@ namespace Stricture
                             GetNamedString(attr, "Message")));
                         break;
 
+                    case WellKnownNames.ExtensionMethodHome:
+                        extensionHomes.Add(new ExtensionHomePolicy(
+                            GetCtorType(attr, 0),
+                            GetCtorString(attr, 1) ?? string.Empty,
+                            GetNamedString(attr, "Namespace"),
+                            GetNamedBool(attr, "MustBePartial", defaultValue: true)));
+                        break;
+
                     default:
                         break;
                 }
@@ -140,6 +149,7 @@ namespace Stricture
                 bannedTypes.ToImmutable(),
                 bannedNamespaces.ToImmutable(),
                 bannedPackages.ToImmutable(),
+                extensionHomes.ToImmutable(),
                 oneTypePerFile,
                 requireSharedStem,
                 defaultVisibilityInternal,
@@ -266,5 +276,15 @@ namespace Stricture
 
         private static INamedTypeSymbol? GetNamedType(AttributeData attr, string name) =>
             GetNamed(attr, name)?.Value as INamedTypeSymbol;
+
+        private static INamedTypeSymbol? GetCtorType(AttributeData attr, int index)
+        {
+            if (attr.ConstructorArguments.Length > index)
+            {
+                return attr.ConstructorArguments[index].Value as INamedTypeSymbol;
+            }
+
+            return null;
+        }
     }
 }

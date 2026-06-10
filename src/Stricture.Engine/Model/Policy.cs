@@ -15,6 +15,7 @@ namespace Stricture
             ImmutableArray<BanTypeEntry> bannedTypes,
             ImmutableArray<BanNamespaceEntry> bannedNamespaces,
             ImmutableArray<BanPackageEntry> bannedPackages,
+            ImmutableArray<ExtensionHomePolicy> extensionHomes,
             bool oneTypePerFile,
             bool requireSharedStem,
             bool defaultVisibilityIsInternal,
@@ -26,6 +27,7 @@ namespace Stricture
             BannedTypes = bannedTypes;
             BannedNamespaces = bannedNamespaces;
             BannedPackages = bannedPackages;
+            ExtensionHomes = extensionHomes;
             OneTypePerFile = oneTypePerFile;
             RequireSharedStem = requireSharedStem;
             DefaultVisibilityIsInternal = defaultVisibilityIsInternal;
@@ -43,6 +45,8 @@ namespace Stricture
         public ImmutableArray<BanNamespaceEntry> BannedNamespaces { get; }
 
         public ImmutableArray<BanPackageEntry> BannedPackages { get; }
+
+        public ImmutableArray<ExtensionHomePolicy> ExtensionHomes { get; }
 
         public bool OneTypePerFile { get; }
 

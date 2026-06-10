@@ -16,3 +16,9 @@ using Stricture;
 
 [assembly: DefaultVisibility(Visibility.Internal)]
 [assembly: BanPackage("Moq", Message = "Hand-write test doubles instead.")]
+
+// IServiceCollection extensions all live in one partial ServiceCollectionExtensions class.
+[assembly: ExtensionMethodHome(
+    typeof(Microsoft.Extensions.DependencyInjection.IServiceCollection),
+    "ServiceCollectionExtensions",
+    Namespace = "Microsoft.Extensions.DependencyInjection")]

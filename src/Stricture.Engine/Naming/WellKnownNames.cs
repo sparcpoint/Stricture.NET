@@ -16,6 +16,7 @@ namespace Stricture
         public const string CoLocateBySuffix = Ns + ".CoLocateBySuffixAttribute";
         public const string DefaultVisibility = Ns + ".DefaultVisibilityAttribute";
         public const string PublicApi = Ns + ".PublicApiAttribute";
+        public const string ExtensionMethodHome = Ns + ".ExtensionMethodHomeAttribute";
         public const string BanType = Ns + ".BanTypeAttribute";
         public const string BanNamespace = Ns + ".BanNamespaceAttribute";
         public const string BanPackage = Ns + ".BanPackageAttribute";

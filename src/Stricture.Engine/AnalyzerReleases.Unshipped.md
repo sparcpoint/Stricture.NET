@@ -12,6 +12,7 @@ ARCH1002 | Stricture.Layout | Warning | Type path does not match structure patte
 ARCH1003 | Stricture.Layout | Warning | Nested type should be promoted to its own file
 ARCH1010 | Stricture.Naming | Warning | Concrete type named after its interface
 ARCH1020 | Stricture.Visibility | Warning | Public type should be internal by default
+ARCH1030 | Stricture.Naming | Warning | Extension methods declared outside their designated host class
 ARCH2001 | Stricture.Layout | Warning | More than one top-level type per file
 ARCH2002 | Stricture.Layout | Warning | Co-located types violate suffix or stem rules
 ARCH3001 | Stricture.Bans | Warning | Usage of a banned type or namespace

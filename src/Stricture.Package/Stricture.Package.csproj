@@ -19,7 +19,9 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/sparcpoint/Stricture.NET</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <PackageReleaseNotes>1.0.1 — Packaging and documentation. The package is now produced by a dedicated build project and ships the Abstractions XML documentation in lib/. No changes to attributes, rules, or diagnostics. Internal: source and tests reorganized to one type per file; version centralized in Directory.Build.props; README expanded and a CLAUDE.md added.
+    <PackageReleaseNotes>1.1.0 — New rule: extension-method home (ARCH1030). Adds the ExtensionMethodHome assembly attribute, which requires that extension methods for a given type live in a single, consistently named host class — optionally in a fixed namespace and declared partial (e.g. IServiceCollection extensions must be a partial ServiceCollectionExtensions class in Microsoft.Extensions.DependencyInjection). A class is governed only when it actually declares an extension method on the configured type. Backward-compatible; the new rule defaults to Warning.
+
+1.0.1 — Packaging and documentation. The package is now produced by a dedicated build project and ships the Abstractions XML documentation in lib/. No changes to attributes, rules, or diagnostics. Internal: source and tests reorganized to one type per file; version centralized in Directory.Build.props; README expanded and a CLAUDE.md added.
 
 1.0.0 — Initial release. Attribute-driven, per-assembly architectural rules (ARCH0001–ARCH4001): folder-structure layout (ARCH1001/1002), nested-type promotion (ARCH1003), interface-naming (ARCH1010), internal-by-default (ARCH1020), one-type-per-file and suffix co-location (ARCH2001/2002), and banned type/namespace/package usage (ARCH3001/4001), plus config validation (ARCH0001) and isolated rule-error reporting (ARCH0002). Ships the attribute library and the analyzer in a single package. All rules default to Warning; escalate to error per rule in .editorconfig.</PackageReleaseNotes>
     <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>

@@ -130,6 +130,37 @@ public sealed class OrderService { }          // ARCH1020 — should be internal
 [PublicApi] public sealed class OrderClient { }   // exempt: intentional public surface
 ```
 
+### Keep extension methods in one home class — `ARCH1030`
+
+Pick the canonical host for a family of extension methods (name, namespace, and whether it must be
+`partial`) and every class that adds extension methods for that type is held to it:
+
+```csharp
+[assembly: ExtensionMethodHome(
+    typeof(Microsoft.Extensions.DependencyInjection.IServiceCollection),
+    "ServiceCollectionExtensions",
+    Namespace = "Microsoft.Extensions.DependencyInjection")]   // MustBePartial = true by default
+```
+
+```csharp
+namespace Microsoft.Extensions.DependencyInjection
+{
+    public static partial class ServiceCollectionExtensions          // OK — any file can extend this partial
+    {
+        public static IServiceCollection AddOrders(this IServiceCollection services) => services;
+    }
+
+    public static class OrderServiceExtensions                       // ARCH1030 — must be the partial
+    {                                                                // 'ServiceCollectionExtensions' class
+        public static IServiceCollection AddPayments(this IServiceCollection services) => services;
+    }
+}
+```
+
+A class is governed only when it actually declares an extension method whose `this` parameter is the
+configured type; the host class is detected by that signal, not by its name. `Namespace` is optional
+(omit it to skip the namespace check) and `MustBePartial` defaults to `true`.
+
 ### One type per file & co-location — `ARCH2001` / `ARCH2002`
 
 ```csharp
@@ -189,6 +220,7 @@ Categories: `Stricture.Config`, `Stricture.Engine`, `Stricture.Layout`, `Strictu
 | `ARCH1003` | A public/internal nested type that should be promoted to its own file |
 | `ARCH1010` | A concrete type named after its interface (`Foo : IFoo`) |
 | `ARCH1020` | A public type that should be internal by default |
+| `ARCH1030` | Extension methods for a type declared outside their designated host class |
 | `ARCH2001` | More than one top-level type per file |
 | `ARCH2002` | Co-located types that mix suffix groups or have mismatched stems |
 | `ARCH3001` | Usage of a banned type or namespace |

@@ -21,6 +21,7 @@ namespace Stricture.Tests.Guards
             new object[] { WellKnownNames.BanType, typeof(BanTypeAttribute) },
             new object[] { WellKnownNames.BanNamespace, typeof(BanNamespaceAttribute) },
             new object[] { WellKnownNames.BanPackage, typeof(BanPackageAttribute) },
+            new object[] { WellKnownNames.ExtensionMethodHome, typeof(ExtensionMethodHomeAttribute) },
         };
 
         [Fact]

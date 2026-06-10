@@ -42,6 +42,10 @@ namespace Stricture
             "ARCH1020", VisibilityCategory, "Public type should be internal by default",
             "Type '{0}' should be internal by default; mark it [PublicApi] if the surface is intentional");
 
+        public static readonly DiagnosticDescriptor Arch1030 = Make(
+            "ARCH1030", NamingCategory, "Extension methods declared outside their designated host class",
+            "Type '{0}' declares extension methods for '{1}'; it must be {2}");
+
         public static readonly DiagnosticDescriptor Arch2001 = Make(
             "ARCH2001", LayoutCategory, "More than one top-level type per file",
             "File declares multiple top-level types; '{0}' should move to its own file");
